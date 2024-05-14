@@ -1,0 +1,26 @@
+gservices:
+
+  php-fpm:
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+    container_name: php-fpm
+    restart: always
+    ports:
+      - "8000:8000"
+    working_dir: /application
+    build:
+      context: ./docker/php-fpm
+    volumes:
+      - .:/application
+      - ~/.cache/composer:/home/www/.composer/cache
+
+#  rr:
+#    build:
+#      dockerfile: ./docker/php-rr/Dockerfile
+#    working_dir: /app
+#    ports:
+#      - '8080:8080' # шарим порт 9001
+#    user: '1000:1000' # работа от текущего юзера в системе
+#    volumes:
+#      - ./:/app # монтируем проект в /app
