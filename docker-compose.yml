@@ -1,4 +1,4 @@
-gservices:
+services:
 
   php-fpm:
     dns:
