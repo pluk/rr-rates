@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\MyBusinessFeature;
+namespace App\Rates;
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
