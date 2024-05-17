@@ -3,7 +3,6 @@
 namespace App\Rates\Controllers;
 
 use App\Rates\DTO\RatesFindDto;
-use App\Rates\Rate;
 use App\Rates\RateService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +23,8 @@ final class RatesController extends AbstractController
         $ratesResponse = $this->rateService->find($dto->date, $dto->currency, $dto->baseCurrency);
 
         return $this->json([
-            'rates' => $ratesResponse->rates,
-            'date' => date('Y-m-d'),
+            'rates' => $ratesResponse->getRates(),
+            'date' => $ratesResponse->date,
         ]);
     }
 }

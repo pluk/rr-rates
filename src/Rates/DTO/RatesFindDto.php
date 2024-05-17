@@ -14,7 +14,7 @@ final readonly class RatesFindDto
         $this->date = isset($queryParams['date']) ?
             new \DateTimeImmutable($queryParams['date']) :
             new \DateTimeImmutable();
-        $this->baseCurrency = isset($queryParams['base_currency']) ?? 'RUR';
-        $this->currency = isset($queryParams['currency']) ?? null;
+        $this->baseCurrency = $queryParams['base_currency'] ?? 'RUR';
+        $this->currency = $queryParams['currency'] ?? null;
     }
 }
