@@ -32,6 +32,17 @@ services:
     volumes:
        - ./docker/postgres/data:/var/lib/postgresql/data:rw
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "15672:15672"
+
 #  rr:
 #    build:
 #      dockerfile: ./docker/php-rr/Dockerfile

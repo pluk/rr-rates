@@ -9,9 +9,9 @@ use App\Rates\Entity\Currency;
 use App\Rates\Entity\Rate;
 use App\Rates\Repository\RateRepository;
 
-final class RateService
+final readonly class RateService
 {
-    public function __construct(private readonly RateRepository $rateRepository)
+    public function __construct(private RateRepository $rateRepository)
     {
     }
 
