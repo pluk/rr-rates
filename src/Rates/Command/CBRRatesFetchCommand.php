@@ -35,11 +35,11 @@ class CBRRatesFetchCommand extends Command
         $daysCount = $days !== null ? (int)  $days : 180;
 
         $date = new \DateTime();
-        $this->dispatch($date->format('d/m/Y'), $io);
+        $this->dispatch($date->format('c'), $io);
 
         for ($i = 1; $i < $daysCount; $i++) {
             $date->modify('-1 days');
-            $dateString = $date->format('d/m/Y');
+            $dateString = $date->format('c');
 
             $this->dispatch($dateString, $io);
         }

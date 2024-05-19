@@ -24,7 +24,8 @@ final class RatesController extends AbstractController
 
         return $this->json([
             'rates' => $ratesResponse->getRates(),
-            'date' => $ratesResponse->date,
+            'date' => $ratesResponse->date->format('Y-m-d'),
+            'base_currency' => $dto->baseCurrency,
         ]);
     }
 }

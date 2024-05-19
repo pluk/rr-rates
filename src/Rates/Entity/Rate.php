@@ -8,33 +8,37 @@ use App\Rates\Repository\RateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
-final readonly class Rate
+#[ORM\Table(name: 'rates')]
+#[ORM\UniqueConstraint(name: 'daily_rate', columns: ['currency_id', 'date'])]
+class Rate
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private int $id;
 
-    #[ORM\OneToOne]
-    private Currency $currency;
-
     #[ORM\Column()]
-    private string $value;
-
-    #[ORM\OneToOne]
-    private Currency $baseCurrency;
+    public readonly string $value;
 
     public function __construct(
-        #[ORM\Column()]
-        public \DateTimeImmutable $date
+        #[ORM\Column(type: 'date')]
+        public \DateTimeInterface $date,
+        #[ORM\ManyToOne]
+        private Currency $currency,
+        string $value,
     ) {
+        $this->value = str_replace(',', '.', $value);
+    }
+
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
     }
 
     public function toArray(): array
     {
         return [
             'currency' => $this->currency->toArray(),
-            'base_currency' => $this->baseCurrency->toArray(),
             'value' => $this->value,
         ];
     }

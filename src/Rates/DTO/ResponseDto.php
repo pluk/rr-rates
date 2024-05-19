@@ -8,21 +8,21 @@ class ResponseDto
 {
     /**
      * @param array<array{
-     *     'currency': string,
-     *     'base_currency': string,
+     *     'currency': array,
+     *     'base_currency': array,
      *     'value': string
      * }> $rates
      */
     public function __construct(
-        public readonly \DateTimeImmutable $date,
+        public readonly \DateTimeInterface $date,
         private array $rates,
     ) {
     }
 
     /**
      * @param array{
-     *     'currency': string,
-     *     'base_currency': string,
+     *     'currency': array,
+     *     'base_currency': array,
      *     'value': string
      * } $rate
      */

@@ -18,10 +18,10 @@ final readonly class RateService
     public function find(\DateTimeImmutable $date, ?string $currency, string $baseCurrency): ResponseDto
     {
         if ($baseCurrency !== Currency::CODE_RUR) {
-            return $this->calculateCrossRate($date, $currency, $currency);
+            return $this->calculateCrossRate($date, $currency, $baseCurrency);
         }
 
-        $rates = $this->rateRepository->findByParams($date, $currency, $baseCurrency);
+        $rates = $this->rateRepository->findLatestByParams($date, $currency);
 
         return new ResponseDto(
             $rates[0]->date ?? $date,
@@ -31,18 +31,20 @@ final readonly class RateService
 
     private function calculateCrossRate(\DateTimeImmutable $date, ?string $currency, string $baseCurrency): ResponseDto
     {
-        $firstRate = $this->rateRepository->findByParams($date, $baseCurrency, Currency::CODE_RUR);
-        $secondRates = $this->rateRepository->findByParams($date, $currency, Currency::CODE_RUR);
+        $firstRate = $this->rateRepository->findLatestByParams($date, $baseCurrency);
 
-        //!!!!!!!!!!!
-        $date = new \DateTimeImmutable();
-        $response = new ResponseDto($date, []);
+        if ($firstRate === []) {
+            return new ResponseDto($date, []);
+        }
+
+        $secondRates = $this->rateRepository->findLatestByParams($date, $currency);
+
+        $response = new ResponseDto($firstRate[0]->date, []);
 
         foreach ($secondRates as $secondRate) {
             $response->addRate([
-                'currency' => '',
-                'base_currency' => '',
-                'value' => '',
+                'currency' => $secondRate->getCurrency()->toArray(),
+                'value' => \bcdiv($secondRate->value, $firstRate[0]->value, 4),
             ]);
         }
 

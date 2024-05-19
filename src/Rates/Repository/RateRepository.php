@@ -7,6 +7,7 @@ namespace App\Rates\Repository;
 use App\Rates\Entity\Rate;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,26 +23,51 @@ class RateRepository extends ServiceEntityRepository
     /**
      * @return array<Rate>
      */
-    public function findByParams(\DateTimeImmutable $date, ?string $currency, string $baseCurrency): array
+    public function findLatestByParams(\DateTimeImmutable $date, ?string $currency): array
     {
-        $queryBuilder = $this->createQueryBuilder('r')
-            ->andWhere('r.baseCurrency = :val')
-            ->setParameter('val', $baseCurrency)
-            ->andWhere('r.date');
+        $queryBuilder = $this->createQueryBuilder('r');
 
         if ($currency !== null) {
-            $queryBuilder->andWhere('r.currency = :val')
-                ->setParameter('val', $currency);
+            $queryBuilder->innerJoin('r.currency', 'c')
+                ->andWhere('c.code = :currency')
+                ->setParameter('currency', $currency);
+        }
+
+        $resultDate = $queryBuilder->andWhere('r.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->getQuery()
+            ->getResult();
+
+        if ($resultDate === []) {
+            $recentDate = $this->getRecentDate();
+
+            $queryBuilder->andWhere('r.date = :date')
+                ->setParameter('date', $recentDate);
         }
 
         return $queryBuilder->getQuery()->getResult();
     }
 
-    private function getRecentDate(): string
+    /**
+     * @return array<Rate>
+     */
+    public function findByParams(\DateTimeImmutable $date, string $currency): array
+    {
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->innerJoin('r.currency', 'c')
+            ->andWhere('c.code = :currency')
+            ->setParameter('currency', $currency)
+            ->andWhere('r.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'));
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    private function getRecentDate(): ?string
     {
         return $this->createQueryBuilder('r')
             ->select($this->createQueryBuilder('r')->expr()->max('r.date'))
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
     }
 }

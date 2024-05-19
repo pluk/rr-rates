@@ -19,7 +19,7 @@ final readonly class CBRClient implements ExternalCurrencyClient
         ]);
     }
 
-    public function getRateByDate(\DateTimeImmutable $date): RatesResponse
+    public function getRatesByDate(\DateTimeImmutable $date): RatesResponse
     {
         $response = $this->client->get('scripts/XML_daily.asp', [
             RequestOptions::QUERY => [
@@ -50,6 +50,7 @@ final readonly class CBRClient implements ExternalCurrencyClient
 
             foreach ($xml->Valute as $valute) {
                 $rates[] = new RateDto(
+                    (string) $valute['ID'],
                     (string) $valute->CharCode,
                     (string) $valute->Name,
                     (string) $valute->Value
