@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RateRepository::class)]
 #[ORM\Table(name: 'rates')]
 #[ORM\UniqueConstraint(name: 'daily_rate', columns: ['currency_id', 'date'])]
+#[ORM\Index(name: 'r_index_date', columns: ['date'])]
 class Rate
 {
     #[ORM\Id]

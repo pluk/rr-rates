@@ -43,6 +43,16 @@ services:
     ports:
       - "15672:15672"
 
+  php-cli:
+    container_name: php-cli
+    restart: always
+    working_dir: /application
+    build:
+      context: ./docker/php-cli
+    volumes:
+      - .:/application
+      - ~/.cache/composer:/home/www/.composer/cache
+
 #  rr:
 #    build:
 #      dockerfile: ./docker/php-rr/Dockerfile

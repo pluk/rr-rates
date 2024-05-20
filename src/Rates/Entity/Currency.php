@@ -7,6 +7,7 @@ namespace App\Rates\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
+#[ORM\Index(name: 'c_code_index', columns: ['code'])]
 class Currency
 {
     final public const string CODE_RUR = 'RUR';

@@ -8,10 +8,11 @@ use App\Rates\DTO\ResponseDto;
 use App\Rates\Entity\Currency;
 use App\Rates\Entity\Rate;
 use App\Rates\Repository\RateRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class RateService
 {
-    public function __construct(private RateRepository $rateRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private RateRepository $rateRepository)
     {
     }
 
@@ -35,6 +36,23 @@ final readonly class RateService
 
         if ($firstRate === []) {
             return new ResponseDto($date, []);
+        }
+
+        if ($currency === Currency::CODE_RUR) {
+            $r = $this->rateRepository->findLatestByParams($date, $baseCurrency);
+
+            return new ResponseDto(
+                $firstRate[0]->date,
+                [
+                    [
+                        'currency' => $this->entityManager
+                            ->getRepository(Currency::class)
+                            ->findOneBy(['code' => Currency::CODE_RUR])
+                            ->toArray(),
+                        'value' => \bcdiv('1.0', $r[0]->value, 4)
+                    ]
+                ]
+            );
         }
 
         $secondRates = $this->rateRepository->findLatestByParams($date, $currency);
