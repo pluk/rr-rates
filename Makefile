@@ -10,6 +10,7 @@ run:
 	docker-compose up -d
 
 migration:
+	sleep 5
 	docker-compose exec -it rr bin/console doctrine:migrations:migrate -n
 
 test:

@@ -13,7 +13,12 @@ make init
 make import-rates
 ``
 
-### Test
-``
-curl localhost:8080/ratesg
-``
+
+#### Get latest rate
+`curl localhost:8080/rates`
+#### Get rate by currency
+`curl 'localhost:8080/rates?currency=EUR'`
+#### Get rate by date
+`curl 'localhost:8080/rates?date=2024-05-15'`
+#### Get cross rate
+`curl 'localhost:8080/rates?currency=EUR&base_currency=USD'`
