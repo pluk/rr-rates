@@ -1,19 +1,19 @@
 services:
 
-  php-fpm:
-    dns:
-      - 8.8.8.8
-      - 4.4.4.4
-    container_name: php-fpm
-    restart: always
-    ports:
-      - "8000:8000"
-    working_dir: /application
-    build:
-      context: ./docker/php-fpm
-    volumes:
-      - .:/application
-      - ~/.cache/composer:/home/www/.composer/cache
+#  php-fpm:
+#    dns:
+#      - 8.8.8.8
+#      - 4.4.4.4
+#    container_name: php-fpm
+#    restart: always
+#    ports:
+#      - "8000:8000"
+#    working_dir: /application
+#    build:
+#      context: ./docker/php-fpm
+#    volumes:
+#      - .:/application
+#      - ~/.cache/composer:/home/www/.composer/cache
 
   database:
     container_name: postgres
